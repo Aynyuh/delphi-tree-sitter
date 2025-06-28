@@ -61,8 +61,12 @@ type
   {$MINENUMSIZE 4}
   TSInputEncoding = (TSInputEncodingUTF8, TSInputEncodingUTF16);
 
-  TSSymbolType = (TSSymbolTypeRegular, TSSymbolTypeAnonymous,
-    TSSymbolTypeAuxiliary);
+  TSSymbolType = (
+    TSSymbolTypeRegular,
+    TSSymbolTypeAnonymous,
+    TSSymbolTypeSupertype, // added in https://github.com/tree-sitter/tree-sitter/commit/0683136ca041f60add8fc9b2e206b79f68bc9204
+    TSSymbolTypeAuxiliary
+  );
 
   TSPoint = record
     row: UInt32;
@@ -688,12 +692,19 @@ function ts_node_descendant_count(self: TSNode): UInt32; cdecl; external ModuleN
  */
 TSNode ts_node_descendant_for_byte_range(TSNode self, uint32_t start, uint32_t end);
 TSNode ts_node_descendant_for_point_range(TSNode self, TSPoint start, TSPoint end);
+*)
+(*
 /**
  * Get the smallest named node within this node that spans the given range of
  * bytes or (row, column) positions.
  */
 TSNode ts_node_named_descendant_for_byte_range(TSNode self, uint32_t start, uint32_t end);
 TSNode ts_node_named_descendant_for_point_range(TSNode self, TSPoint start, TSPoint end);
+*)
+function ts_node_named_descendant_for_byte_range(self: TSNode; start: UInt32; &end: UInt32): TSNode; cdecl; external ModuleName;
+function ts_node_named_descendant_for_point_range(self: TSNode; start: TSPoint; &end: TSPoint): TSNode; cdecl; external ModuleName;
+
+(*
 /**
  * Edit the node to keep it in-sync with source code that has been edited.
  *
